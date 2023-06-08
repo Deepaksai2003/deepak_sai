@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <style>
+    .container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    .left-container, .right-container {
+      border: 1px solid #ccc;
+      padding: 10px;
+      width: 200px;
+      height: 300px;
+      margin: 10px;
+      overflow: auto;
+    }
+
+    .left-container img {
+      width: 100px;
+      height: 100px;
+      margin: 5px;
+      object-fit: cover;
+    }
+
+    .right-container {
+      background-color: lightgray;
+    }
+
+    .right-container img {
+      width: 100px;
+      height: 100px;
+      margin: 5px;
+      object-fit: contain;
+      display: block;
+    }
+
+    button {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Drag and Drop Example</h2>
+    <div class="left-container">
+      <h3>Source</h3>
+      <img src="https://img.freepik.com/free-vector/early-morning-cartoon-nature-landscape-sunrise_107791-10161.jpg?w=2000" draggable="true" ondragstart="drag(event)" id="item1">
+      <img src="https://img.freepik.com/free-vector/early-morning-cartoon-nature-landscape-sunrise_107791-10161.jpg?w=2000" draggable="true" ondragstart="drag(event)" id="item2">
+      <img src="https://img.freepik.com/free-vector/early-morning-cartoon-nature-landscape-sunrise_107791-10161.jpg?w=2000" draggable="true" ondragstart="drag(event)" id="item3">
+    </div>
+    <div class="right-container" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <h3>Destination</h3>
+    </div>
+    <button onclick="reset()">Reset</button>
+  </div>
+
+  <script>
+    // Function to allow drop on the destination container
+    function allowDrop(event) {
+      event.preventDefault();
+    }
+   // Function to handle the drag start event
+    function drag(event) {
+      event.dataTransfer.setData("text/plain", event.target.id);
+    }
+   // Function to handle the drop event
+    function drop(event) {
+      event.preventDefault();
+      var data = event.dataTransfer.getData("text/plain");
+      var draggedItem = document.getElementById(data);
+      var clonedItem = draggedItem.cloneNode(true); // Clone the dragged item
+      var uniqueId = "item-" + Date.now(); // Generate a unique id for the cloned item
+      clonedItem.setAttribute("id", uniqueId); // Set the unique id
+      event.target.appendChild(clonedItem);
+      showMessage("Item dropped successfully!");
+
+      // Remove the dragged item from the source container
+      draggedItem.parentNode.removeChild(draggedItem);
+    }
+   // Function to show a temporary message
+    function showMessage(message) {
+      var messageBox = document.createElement("div");
+      messageBox.textContent = message;
+      document.body.appendChild(messageBox);
+      setTimeout(function() {
+        document.body.removeChild(messageBox);
+      }, 2000);
+    }
+
+    // Function to reset the containers
+    function reset() {
+      var leftContainer = document.querySelector('.left-container');
+      var rightContainer = document.querySelector('.right-container');
+      rightContainer.innerHTML = "<h3>Destination</h3>";
+      leftContainer.innerHTML = `
+        <h3>Source</h3>
+        <img src="https://img.freepik.com/free-vector/early-morning-cartoon-nature-landscape-sunrise_107791-10161.jpg?w=2000" draggable="true" ondragstart="drag(event)" id="item1">
+        <img src="https://img.freepik.com/free-vector/early-morning-cartoon-nature-landscape-sunrise_107791-10161.jpg?w=2000" draggable="true" ondragstart="drag(event)" id="item2">
+        <img src="https://img.freepik.com/free-vector/early-morning-cartoon-nature-landscape-sunrise_107791-10161.jpg?w=2000" draggable="true" ondragstart="drag(event)" id="item3">
+      `;
+    }
+  </script>
+</body>
+</html>
